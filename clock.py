@@ -16,22 +16,20 @@ if __name__ == "__main__":
 
     print()
     if WORKING != 0:
-        print(DIV, "WORKING")
+        print(DIV, "WORKING @", log.iloc[-1,-2])
     else:
-        print(DIV, "IDLE")
+        print(DIV, "IDLE @", log.iloc[-1,-2])
 
     new_log = []
 
-    quit()
     cmd = ""
     while True:
         cmd = input("\t\t\t::")
 
+        ## Override Commands
         if cmd == "" or cmd.lower() == "q":
-            print("Nothing saved.")
             quit()
         elif not cmd.isalnum() and " " not in cmd:
-            print("Nothing saved.")
             quit()
         elif cmd.startswith("s"):
             print()
@@ -40,37 +38,35 @@ if __name__ == "__main__":
             else:
                 with open(log_path, 'a') as f:
                     for l in new_log:
-                        print("SAVED", l)
+                        print("SAVED <<", *l)
                         f.write(",".join(l) + "\n")
                     new_log = []
-
             print()
             continue
-        if cmd.endswith("q"):
+
+        if cmd.endswith(" q") or cmd == "sq":
             quit()
 
+        ## Command Processing
         x = cmd.split(" ")
-        W = x[0]
-        if W != "2":
-            S = "_".join(x[1:])
-            S = S.upper()
-        else:
+        if len(x) > 1:
+            W = x[0]
             S = " ".join(x[1:])
-        if W.lower() == "out":
-            W = "0"
-        now = datetime.now()
-        t = now.strftime("%H:%M")
-        new_log.append([now.strftime("%y/%m/%d"), t,S,W])
-        if W == "1":
-            print(t,"-", "WORKING (%s)" % S)
-        elif W == "0":
-            print(t,"-", "IDLE (%s)" % S)
-        elif W.lower() == "in":
-            W = "1"
-        now = datetime.now()
-        t = now.strftime("%H:%M")
-        new_log.append([now.strftime("%y/%m/%d"), t,S,W])
-        if W == "1":
-            print(t,"-", "WORKING (%s)" % S)
-        elif W == "0":
-            print(t,"-", "IDLE (%s)" % S)
+
+            if W != "2":
+                S = S.upper()
+
+            if W.lower() == "out":
+                W = "0"
+            elif W.lower() == "in":
+                W = "1"
+
+            now = datetime.now()
+            t = now.strftime("%H:%M")
+
+            new_log.append([now.strftime("%y/%m/%d"), t, S, W])
+
+            if W == "1":
+                print(t,"-", "WORKING @ %s" % S)
+            elif W == "0":
+                print(t,"-", "IDLE @ %s" % S)
