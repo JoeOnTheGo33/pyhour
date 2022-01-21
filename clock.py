@@ -7,7 +7,7 @@ def read_log(log_path):
 
 if __name__ == "__main__":
     DIV = "-----  "
-    log_path = "hours.log"
+    log_path = "w4.hours"
     log = read_log(log_path)
 
     WORKING = log.iloc[-1,-1]
