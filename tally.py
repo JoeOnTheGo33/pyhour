@@ -3,6 +3,9 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
 from datetime import datetime, timedelta
+from datetime import date
+from dateutil.rrule import rrule, DAILY
+import dateutil.relativedelta as rel
 
 
 def nice(h):
@@ -56,7 +59,19 @@ if __name__ == "__main__":
 	tally.to_csv("tally.log", index=False)
 	print()
 	print(weekly_tally.tail())
+
+	H = 0
+	rd = rel.relativedelta(days=1, weekday=rel.FR)
+	next_friday = date.today() + rd
+	for dt in rrule(DAILY, dtstart=date.today()+timedelta(days=1), until=next_friday):
+		H += 8
+		print(dt.strftime("%Y-%m-%d"))
+
 	HD = weekly_tally["Diff"].sum()
-	print("\nHours required this week: ", nice(HD))
-	
+
+	print()
+	print("Hours required this week:\t", nice(HD))
+	print("Hours required today:\t\t", nice(HD - H))
+	print("Check for errors Friday !!")
+
 	input("...")
