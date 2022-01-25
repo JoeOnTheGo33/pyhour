@@ -63,9 +63,11 @@ if __name__ == "__main__":
 	H = 0
 	rd = rel.relativedelta(days=1, weekday=rel.FR)
 	next_friday = date.today() + rd
+	print()
+	print("Days left in week:")
 	for dt in rrule(DAILY, dtstart=date.today()+timedelta(days=1), until=next_friday):
 		H += 8
-		print(dt.strftime("%Y-%m-%d"))
+		print(dt.strftime("\t%Y-%m-%d"))
 
 	HD = weekly_tally["Diff"].sum()
 
