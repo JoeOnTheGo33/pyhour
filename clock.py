@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from datetime import datetime
 import pandas as pd
+import os
+path = os.path.dirname(__file__)
 
 def read_log(log_path):
     return pd.read_csv(log_path, delimiter=',', quotechar='"')
@@ -8,7 +10,7 @@ def read_log(log_path):
 if __name__ == "__main__":
     DIV = "-----  "
     log_path = "w4.hours"
-    log = read_log(log_path)
+    log = read_log(os.path.join(path, log_path))
 
     WORKING = log.iloc[-1,-1]
     print("> Opened log file [%s]" % log_path)
