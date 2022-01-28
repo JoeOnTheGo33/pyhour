@@ -2,15 +2,18 @@
 from datetime import datetime
 import pandas as pd
 import os
+
 path = os.path.dirname(__file__)
+
 
 def read_log(log_path):
     return pd.read_csv(log_path, delimiter=',', quotechar='"')
 
-if __name__ == "__main__":
+
+def main():
     DIV = "-----  "
-    log_path = "w4.hours"
-    log = read_log(os.path.join(path, log_path))
+    log_path = os.path.join(path, "w4.hours")
+    log = read_log(log_path)
 
     WORKING = log.iloc[-1,-1]
     print("> Opened log file [%s]" % log_path)
@@ -72,3 +75,12 @@ if __name__ == "__main__":
                 print(t,"-", "WORKING @ %s" % S)
             elif W == "0":
                 print(t,"-", "IDLE @ %s" % S)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        print(e)
+    finally:
+        input()
