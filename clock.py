@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import os
 
-path = os.path.dirname(__file__)
+path = '~/Me/pyhour'
 
 
 def read_log(log_path):
@@ -33,9 +33,9 @@ def main():
 
         ## Override Commands
         if cmd == "" or cmd.lower() == "q":
-            quit()
+            exit(0)
         elif not cmd.isalnum() and " " not in cmd:
-            quit()
+            exit(0)
         elif cmd.startswith("s"):
             print()
             if len(new_log) == 0:
@@ -50,7 +50,7 @@ def main():
             continue
 
         if cmd.endswith(" q") or cmd == "sq":
-            quit()
+            exit(0)
 
         ## Command Processing
         x = cmd.split(" ")
@@ -78,9 +78,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(e)
-    finally:
-        input()
+    main()

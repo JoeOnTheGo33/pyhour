@@ -1,1 +1,1 @@
-gnome-terminal --command="python3 clock.py"
+python3 clock.py
