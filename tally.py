@@ -74,6 +74,5 @@ if __name__ == "__main__":
 	print()
 	print("Hours required this week:\t", nice(HD))
 	print("Hours required today:\t\t", nice(HD - H))
-	print("Check for errors Friday !!")
 
 	input("...")
