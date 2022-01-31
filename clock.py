@@ -1,79 +1,70 @@
 #!/usr/bin/env python3
 from datetime import datetime
 import pandas as pd
+import argparse
 import os
 
-path = '~/Me/pyhour'
+path = '/home/jy/Me/pyhour'
 
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Py Hour')
+    parser.add_argument('m', nargs='?', help='0 - inactive | 1 - active', default=None)
+    parser.add_argument('s', nargs='?', help='simple tag for time use', default=None)
+    parser.add_argument('-l', help='list recent entries')
+    args = parser.parse_args()
+    return args
 
 def read_log(log_path):
     return pd.read_csv(log_path, delimiter=',', quotechar='"')
 
 
 def main():
+    args = parse_args()
+    m = args.m
+    s = args.s
     DIV = "-----  "
     log_path = os.path.join(path, "w4.hours")
     log = read_log(log_path)
 
     WORKING = log.iloc[-1,-1]
     print("> Opened log file [%s]" % log_path)
-    print(log.tail())
+    if m is None and s is None:
+        print(log.tail())
+        quit()
 
     print()
-    if WORKING != 0:
+
+    if WORKING == 1:
         print(DIV, "ACTIVE   @", log.iloc[-1,-2])
+    elif WORKING == 0:
+        print(DIV, "INACTIVE @", log.iloc[-1, -2])
     else:
-        print(DIV, "INACTIVE @", log.iloc[-1,-2])
+        print(DIV, "NOTE    //", repr(log.iloc[-1,-2]))
 
-    new_log = []
+    ## Command Processing
+    if s is None:
+        if m == 1:
+            s = "ONLINE"
+        else:
+            s = "OFFLINE"
+    elif m != "2":
+        s = s.upper().replace(" ", "_")
 
-    cmd = ""
-    while True:
-        cmd = input("\t\t\t::")
+    now = datetime.now()
+    t = now.strftime("%H:%m")
 
-        ## Override Commands
-        if cmd == "" or cmd.lower() == "q":
-            exit(0)
-        elif not cmd.isalnum() and " " not in cmd:
-            exit(0)
-        elif cmd.startswith("s"):
-            print()
-            if len(new_log) == 0:
-                print("Saved Nothing.")
-            else:
-                with open(log_path, 'a') as f:
-                    for l in new_log:
-                        print("SAVED <<", *l)
-                        f.write(",".join(l) + "\n")
-                    new_log = []
-            print()
-            if cmd.endswith("q"):
-                exit(0)
-            continue
+    print()
+    entry = [now.strftime("%y/%m/%d"), t, s, m]
+    with open(log_path, 'a') as f:
+        f.write(",".join(entry) + "\n")
 
-        ## Command Processing
-        x = cmd.split(" ")
-        if len(x) > 1:
-            W = x[0]
-            S = " ".join(x[1:])
-
-            if W != "2":
-                S = S.upper()
-
-            if W.lower() == "out":
-                W = "0"
-            elif W.lower() == "in":
-                W = "1"
-
-            now = datetime.now()
-            t = now.strftime("%H:%M")
-
-            new_log.append([now.strftime("%y/%m/%d"), t, S, W])
-
-            if W == "1":
-                print(t,"-", "ACTIVE   @", S)
-            elif W == "0":
-                print(t,"-", "INACTIVE @", S)
+    if m == "1":
+        print(t, "-", "ACTIVE   @", s)
+    elif m == "0":
+        print(t, "-", "INACTIVE @", s)
+    elif m == "2":
+        print(t, "-", "NOTE    //", repr(s))
 
 
 if __name__ == "__main__":
