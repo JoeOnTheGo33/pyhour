@@ -21,9 +21,9 @@ def main():
 
     print()
     if WORKING != 0:
-        print(DIV, "WORKING @", log.iloc[-1,-2])
+        print(DIV, "ACTIVE   @", log.iloc[-1,-2])
     else:
-        print(DIV, "IDLE @", log.iloc[-1,-2])
+        print(DIV, "INACTIVE @", log.iloc[-1,-2])
 
     new_log = []
 
@@ -47,10 +47,9 @@ def main():
                         f.write(",".join(l) + "\n")
                     new_log = []
             print()
+            if cmd.endswith("q"):
+                exit(0)
             continue
-
-        if cmd.endswith(" q") or cmd == "sq":
-            exit(0)
 
         ## Command Processing
         x = cmd.split(" ")
@@ -72,9 +71,9 @@ def main():
             new_log.append([now.strftime("%y/%m/%d"), t, S, W])
 
             if W == "1":
-                print(t,"-", "WORKING @ %s" % S)
+                print(t,"-", "ACTIVE   @", S)
             elif W == "0":
-                print(t,"-", "IDLE @ %s" % S)
+                print(t,"-", "INACTIVE @", S)
 
 
 if __name__ == "__main__":
