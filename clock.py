@@ -28,6 +28,7 @@ def main():
     log = read_log(log_path)
 
     WORKING = log.iloc[-1,-1]
+    time = log.iloc[-1,1]
     print("> Opened log file [%s]" % log_path)
     if m is None and s is None:
         print(log.tail())
@@ -36,15 +37,15 @@ def main():
     print()
 
     if WORKING == 1:
-        print(DIV, "ACTIVE   @", log.iloc[-1,-2])
+        print(time, "- ACTIVE   @", log.iloc[-1, -2])
     elif WORKING == 0:
-        print(DIV, "INACTIVE @", log.iloc[-1, -2])
+        print(time, "- INACTIVE @", log.iloc[-1, -2])
     else:
-        print(DIV, "NOTE    //", repr(log.iloc[-1,-2]))
+        print(time, "- NOTE    //", repr(log.iloc[-1, -2]))
 
     ## Command Processing
     if s is None:
-        if m == 1:
+        if m == "1":
             s = "ONLINE"
         else:
             s = "OFFLINE"
@@ -52,7 +53,7 @@ def main():
         s = s.upper().replace(" ", "_")
 
     now = datetime.now()
-    t = now.strftime("%H:%m")
+    t = now.strftime("%H:%M")
 
     print()
     entry = [now.strftime("%y/%m/%d"), t, s, m]
@@ -60,11 +61,11 @@ def main():
         f.write(",".join(entry) + "\n")
 
     if m == "1":
-        print(t, "-", "ACTIVE   @", s)
+        print(t, "- ACTIVE   @", s)
     elif m == "0":
-        print(t, "-", "INACTIVE @", s)
+        print(t, "- INACTIVE @", s)
     elif m == "2":
-        print(t, "-", "NOTE    //", repr(s))
+        print(t, "- NOTE    //", repr(s))
 
 
 if __name__ == "__main__":
