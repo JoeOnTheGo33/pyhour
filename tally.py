@@ -1,6 +1,7 @@
 import warnings
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import pandas as pd
 from datetime import datetime, timedelta
 from datetime import date

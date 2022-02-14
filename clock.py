@@ -14,7 +14,7 @@ def parse_args():
     parser.add_argument('-p', action='store_true', help='list recent entries')
 
     parser.add_argument('-l', action='store_true', help='go inactive for lunch')
-    parser.add_argument('-n', action='store_true', help='go active status=ONLINE')
+    parser.add_argument('-x', action='store_true', help='go active status=ONLINE')
     parser.add_argument('-o', action='store_true', help='go inactive status=OFFLINE')
     parser.add_argument('-d', action='store_true', help='dry run')
 
@@ -22,12 +22,14 @@ def parse_args():
     if args.l:
         args.m = 1
         args.s = "LUNCH"
-    if args.n:
+    if args.x:
         args.m = 1
         args.s = "ONLINE"
     if args.o:
         args.m = 0
         args.s = "OFFLINE"
+    if args.m is None and len(args.s) == 0:
+        args.d = True
     if args.s is not None and isinstance(args.s, list):
         args.s = "_".join(args.s).upper()
     return args
@@ -74,7 +76,7 @@ def main():
     t = now.strftime("%H:%M")
 
     print()
-    entry = [now.strftime("%y/%m/%d"), t, s, m]
+    entry = [now.strftime("%y/%m/%d"), t, s, str(m)]
     if not args.d:
         with open(log_path, 'a') as f:
             f.write(",".join(entry) + "\n")
