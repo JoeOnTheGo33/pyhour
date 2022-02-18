@@ -16,7 +16,7 @@ def nice(v):
 if __name__ == "__main__":
     WEEK = datetime.today().isocalendar()[1]
     print("WEEK", WEEK)
-    log = pd.read_csv("w4.hours", delimiter=',',
+    log = pd.read_csv("/home/jy/Me/pyhour/w4.hours", delimiter=',',
                       quotechar='"', parse_dates=[['Date', 'Time']],
                       date_parser=lambda x, y: pd.to_datetime(x + " " + y, format='%y/%m/%d %H:%M'))
     print(log.tail())
@@ -73,7 +73,10 @@ if __name__ == "__main__":
     HD = weekly_tally["Diff"].sum()
 
     print()
-    print("Hours required this week:\t", nice(HD))
-    print("Hours required today:\t\t", nice(HD - H))
+    print("RECENT:")
+    print("\tHours required this week:\t", nice(weekly_tally.iloc[-1]["Diff"]))
+    print("ACCUMLATED:")
+    print("\tHours required this week:\t", nice(HD))
+    print("\tHours required today:\t\t", nice(HD - H))
 
     input("...")
