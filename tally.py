@@ -45,6 +45,9 @@ if __name__ == "__main__":
         if mode2 == 0 or mode2 == 1:
             mode = mode2
 
+    if mode == 1 and datetime.now() > start:
+        h += (datetime.now() - start) / timedelta(hours=1)
+
     tally = pd.concat([tally, pd.DataFrame({"Date": [start.date()], "Hours": [h]})],
                       ignore_index=True, axis=0)
 
@@ -78,5 +81,3 @@ if __name__ == "__main__":
     print("ACCUMLATED:")
     print("\tHours required this week:\t", nice(HD))
     print("\tHours required today:\t\t", nice(HD - H))
-
-    input("...")
