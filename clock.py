@@ -3,6 +3,7 @@ from datetime import datetime
 import pandas as pd
 import argparse
 import os
+import tally
 
 path = '/home/jy/Me/pyhour'
 
@@ -12,13 +13,18 @@ def parse_args():
     parser.add_argument('m', nargs='?', choices=[0, 1], help='0 - inactive | 1 - active', default=None, type=int)
     parser.add_argument('s', nargs='*', help='simple tag for time use', default=None)
     parser.add_argument('-p', action='store_true', help='list recent entries')
-
-    parser.add_argument('-l', action='store_true', help='go inactive for lunch')
-    parser.add_argument('-x', action='store_true', help='go active status=ONLINE')
-    parser.add_argument('-o', action='store_true', help='go inactive status=OFFLINE')
     parser.add_argument('-d', action='store_true', help='dry run')
+    parser.add_argument('-T', action='store_true', help='Tally...')
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-l', action='store_true', help='go inactive for lunch')
+    group.add_argument('-x', action='store_true', help='go active status=ONLINE')
+    group.add_argument('-o', action='store_true', help='go inactive status=OFFLINE')
+    group.add_argument('-b', action='store_true', help='go inactive status=BREAK')
 
     args = parser.parse_args()
+    if args.T:
+        return args
     if args.l:
         args.m = 1
         args.s = "LUNCH"
@@ -28,6 +34,9 @@ def parse_args():
     if args.o:
         args.m = 0
         args.s = "OFFLINE"
+    if args.b:
+        args.m = 0
+        args.s = "BREAK"
     if args.m is None and len(args.s) == 0:
         args.d = True
     if args.s is not None and isinstance(args.s, list):
@@ -41,6 +50,9 @@ def read_log(log_path):
 
 def main():
     args = parse_args()
+    if args.T:
+        tally.main()
+        return
     m = args.m
     s = args.s
     if args.d:

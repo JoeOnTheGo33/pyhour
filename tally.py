@@ -23,13 +23,14 @@ def nice(v):
         return ("%d:%02.0f" % (int(abs(v)), int((abs(v) % 1) * 60))).rjust(6)
 
 
-if __name__ == "__main__":
+def main():
     WEEK = datetime.today().isocalendar()[1]
     print(" " * 12 + "===", "WEEK", WEEK, "===")
     log = pd.read_csv("/home/jy/Me/pyhour/w4.hours", delimiter=',',
                       quotechar='"', parse_dates=[['Date', 'Time']],
                       date_parser=lambda x, y: pd.to_datetime(x + " " + y, format='%y/%m/%d %H:%M'))
-    print("RECENT LOG:"); print(log.tail())
+    print("RECENT LOG:");
+    print(log.tail())
     tally = pd.DataFrame(columns=["Date", "Hours"])
 
     start = log.iloc[0]["Date_Time"]
@@ -107,7 +108,9 @@ if __name__ == "__main__":
 
     weekly_tally["Diff"] = weekly_tally["Required"] - weekly_tally["Hours"]
 
-    print(); print("WEEKLY TALLY:"); print(weekly_tally.tail())
+    print()
+    print("WEEKLY TALLY:")
+    print(weekly_tally.tail())
 
     HD = weekly_tally["Diff"].sum()
 
@@ -120,3 +123,7 @@ if __name__ == "__main__":
     print("    ", "This week: ".ljust(10), nice(HD), "    ",
           "Today: ".ljust(7), nice(HD - H),
           sep="")
+
+
+if __name__ == "__main__":
+    main()
