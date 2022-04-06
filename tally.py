@@ -86,7 +86,7 @@ def main():
         print(overtime)
         quit()
     print(tally.tail())
-    tally.to_csv("tally.log", index=False)
+    # tally.to_csv("tally.log", index=False)
 
     weekly_tally = tally.groupby("Week").sum()
     overtime = weekly_tally["Required"] > 35
