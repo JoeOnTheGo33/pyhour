@@ -116,8 +116,16 @@ def main():
 
     print()
     print("RECENT:")
+    today = tally.loc[tally["Date"].apply(lambda x: x.date()) == date.today()]
+    if today.empty:
+        H = 0
+        RH = HOURS_PER_DAY
+        if date.today().weekday() < 5:
+            print("      YOU DIDN'T WORK TODAY!!")
+    else:
+        RH = tally.iloc[-1]["Required"] - tally.iloc[-1]["Hours"]
     print("    ", "This week: ".ljust(10), nice(weekly_tally.iloc[-1]["Diff"]), "    ",
-          "Today: ".ljust(7), nice(tally.iloc[-1]["Required"] - tally.iloc[-1]["Hours"]),
+          "Today: ".ljust(7), nice(RH),
           sep="")
     print("ACCUMULATED:")
     print("    ", "This week: ".ljust(10), nice(HD), "    ",
