@@ -12,6 +12,7 @@ import io
 REQ = """Date,Required
 2022-02-21,0
 2022-02-22,0
+2022-04-15,0
 """
 HOURS_PER_DAY = 7
 
@@ -76,7 +77,7 @@ def main():
     res["Hours"] = pd.to_numeric(res["Hours"])
     tally = res
 
-    tally["Week"] = tally["Date"].apply(lambda x: x.isocalendar()[1])
+    tally["Week"] = pd.to_numeric(tally["Date"].apply(lambda x: x.isocalendar()[1]))
     tally = tally.sort_values("Date")
 
     print("RECENT TALLY:")
@@ -116,15 +117,17 @@ def main():
 
     print()
     print("RECENT:")
-    today = tally.loc[tally["Date"].apply(lambda x: x.date()) == date.today()]
+    today = tally.loc[tally["Date"].apply(lambda x: x.date()) == date.today()].iloc[0]
+    this_week = weekly_tally.loc[WEEK]
+
     if today.empty:
         H = 0
         RH = HOURS_PER_DAY
         if date.today().weekday() < 5:
             print("      YOU DIDN'T WORK TODAY!!")
     else:
-        RH = tally.iloc[-1]["Required"] - tally.iloc[-1]["Hours"]
-    print("    ", "This week: ".ljust(10), nice(weekly_tally.iloc[-1]["Diff"]), "    ",
+        RH = today["Required"] - today["Hours"]
+    print("    ", "This week: ".ljust(10), nice(this_week["Diff"]), "    ",
           "Today: ".ljust(7), nice(RH),
           sep="")
     print("ACCUMULATED:")
