@@ -90,7 +90,7 @@ def main():
     # tally.to_csv("tally.log", index=False)
 
     weekly_tally = tally.groupby("Week").sum()
-    overtime = weekly_tally["Required"] > 35
+    overtime = weekly_tally["Required"] > 40
     weekly_tally.loc[overtime, "Required"] = HOURS_PER_DAY * 5
 
     H = 0
@@ -100,7 +100,11 @@ def main():
         print()
         print("Days left in week:")
         for dt in rrule(DAILY, dtstart=date.today() + timedelta(days=1), until=next_friday):
-            H += HOURS_PER_DAY
+            try:
+                row = tally.loc[tally["Date"] == dt].iloc[0]
+                H += row["Required"]
+            except IndexError:
+                H += HOURS_PER_DAY
             print(dt.strftime("\t%Y-%m-%d"))
         weekly_tally.at[weekly_tally.shape[0], "Required"] += H
     else:
